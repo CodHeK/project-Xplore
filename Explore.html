@@ -28,7 +28,10 @@
                }
            }
            let config = {
-               container: '#tree'
+               container: '#tree',
+               connectors: {
+                   type: 'step'
+               }
            };
            for(const [_, v] of Object.entries(tree)) {
                treeArray.push(v);
