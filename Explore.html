@@ -14,36 +14,33 @@
     <div id="tree" style="width: auto;height: auto"> </div>
 
     <script>
-        let vis = new Map();
-        const dfs = (tree, root, objTree) => {
-            console.log(tree, root, objTree)
+        let vis = new Map(), objTree = {};
+        const dfs = (tree, root) => {
+            // console.log(tree, root, objTree[root])
             vis.set(root, true)
-            tree['children'] = []
-            if(objTree === undefined) {
+            if(objTree[root].children === undefined || objTree[root].children === "") {
+                tree['children'] = []
                 tree['children'].push({
                     text: { name: root }
                 });
                 return;
             }
 
-            let children = objTree.children;
+            let children = objTree[root].children;
 
-            console.log(children.split("/"));
-
+            tree['children'] = []
             for(const child of children.split("/")) {
                 if(!vis.has(child)) {
-                    tree['text'] = objTree.word;
                     tree['children'].push({
-                        text: {name: child},
-                        children: []
+                        text: { name: child }
                     });
-                    dfs(tree['children'], child, objTree[child])
+                    dfs(tree['children'], child);
                 }
             }
             return tree;
         }
         const genTree = (nodes, word) => {
-           let tree = {}, objTree = {};
+           let tree = {};
            for(const node of nodes) {
                objTree[node.Word] = {
                    word: node.Word,
@@ -58,12 +55,13 @@
            }
 
            let Nodes = {
+               text: { name: word },
                children: []
            };
 
-           console.log(objTree)
+           // console.log(objTree)
 
-           dfs(Nodes, word, objTree[word]);
+           dfs(Nodes, word);
 
            console.log(Nodes)
 
