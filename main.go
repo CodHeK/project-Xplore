@@ -17,6 +17,7 @@ type Node struct {
 	Word string
 	Level int
 	Parent string
+	Children string
 }
 
 type Page struct {
@@ -42,15 +43,23 @@ func get(url string) []string {
 	return ret
 }
 
-func threading(c chan []string, word string, parentMap map[string]string) {
+func threading(c chan []string, word string, parentMap map[string]string, childrenMap map[string]string) {
 	defer wg.Done()
 	var words []string
-	for _, w := range get(buildURL(word)) {
-		words = append(words, w)
-
-		parentMap[w] = word
-
-	}
+	childString := ""
+	for i, w := range get(buildURL(word)) {
+		if i <= 3 {
+			words = append(words, w)
+			parentMap[w] = word
+			childString += w + "/"
+		}
+		if i == 4 {
+			words = append(words, w)
+			parentMap[w] = word
+			childString += w
+		}
+  	}
+	childrenMap[word] = childString
 	c <- words
 }
 
@@ -74,6 +83,8 @@ func wordHandler(w http.ResponseWriter, r *http.Request) {
 
 	parentMap := make(map[string]string)
 
+	childrenMap := make(map[string]string)
+
 	for i := 1; i <= maxDepth; i++ {
 		fmt.Println(i)
 		q, nq = nq, make(map[string]int)
@@ -82,7 +93,7 @@ func wordHandler(w http.ResponseWriter, r *http.Request) {
 			if _, ok := vis[word]; !ok {
 				wg.Add(1)
 				vis[word] = true
-				go threading(queue, word, parentMap)
+				go threading(queue, word, parentMap, childrenMap)
 			}
 		}
 		wg.Wait()
@@ -90,14 +101,14 @@ func wordHandler(w http.ResponseWriter, r *http.Request) {
 		for v := range queue {
 			for _, w := range v {
 				nq[w] = i
-				store[Node { w, i, parentMap[w] }] = true
+				store[Node { w, i, parentMap[w], childrenMap[w] }] = true
 			}
 		}
 	}
 
 	var List []Node
 
-	List = append(List, Node { word, 0, parentMap[word] })
+	List = append(List, Node { word, 0, parentMap[word], childrenMap[word] })
 	for k, _ := range store {
 		List = append(List, k)
 	}
