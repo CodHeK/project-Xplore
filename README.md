@@ -34,7 +34,7 @@ git clone https://github.com/CodHeK/project-Xplore.git
 
 go run main.go
 
-GO TO localhost:90/word/{you-word-here}
+GO TO localhost:90/word/{you-word-here} Eg: localhost:90/word/austere
 
 DEPTH can be set using the maxDepth variable in the main.go file
 ```
