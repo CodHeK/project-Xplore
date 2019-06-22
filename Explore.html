@@ -17,24 +17,22 @@
         let vis = new Map(), objTree = {};
         const dfs = (tree, root) => {
             // console.log(tree, root, objTree[root])
+            let c = 0;
             vis.set(root, true)
             if(objTree[root].children === undefined || objTree[root].children === "") {
-                tree['children'] = []
-                tree['children'].push({
-                    text: { name: root }
-                });
                 return;
             }
 
             let children = objTree[root].children;
 
-            tree['children'] = []
+            tree['children'] = [];
             for(const child of children.split("/")) {
                 if(!vis.has(child)) {
                     tree['children'].push({
                         text: { name: child }
                     });
-                    dfs(tree['children'], child);
+                    dfs(tree['children'][c], child);
+                    c += 1;
                 }
             }
             return tree;
