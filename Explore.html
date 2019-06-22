@@ -11,13 +11,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
 </head>
 <body>
-    <div id="tree" style="width: auto;height: auto"> </div>
+    <div id="tree" style="width: auto;height: auto;"> </div>
 
     <script>
         let vis = new Map(), objTree = {};
         const dfs = (tree, root) => {
-            // console.log(tree, root, objTree[root])
-            let c = 0;
+            console.log(tree, root, objTree[root])
             vis.set(root, true)
             if(objTree[root].children === undefined || objTree[root].children === "") {
                 return;
@@ -26,48 +25,48 @@
             let children = objTree[root].children;
 
             tree['children'] = [];
+            let c = 0;
             for(const child of children.split("/")) {
                 if(!vis.has(child)) {
                     tree['children'].push({
                         text: { name: child }
                     });
-                    dfs(tree['children'][c], child);
+                    if(child != "")
+                        dfs(tree['children'][c], child);
                     c += 1;
                 }
             }
             return tree;
         }
+
         const genTree = (nodes, word) => {
-           let tree = {};
-           for(const node of nodes) {
-               objTree[node.Word] = {
-                   word: node.Word,
-                   children: node.Children
-               };
-           }
-           tree['chart'] = {
-               container: "#tree",
-               connectors: {
-                   type: 'step'
-               }
-           }
+            let tree = {};
+            for(const node of nodes) {
+                objTree[node.Word] = {
+                    word: node.Word,
+                    children: node.Children
+                };
+            }
+            tree['chart'] = {
+                container: "#tree",
+                connectors: {
+                    type: 'straight'
+                }
+            }
 
-           let Nodes = {
-               text: { name: word },
-               children: []
-           };
+            let Nodes = {
+                text: { name: word },
+                children: []
+            };
 
-           // console.log(objTree)
+            dfs(Nodes, word);
 
-           dfs(Nodes, word);
+            console.log(Nodes)
 
-           console.log(Nodes)
+            tree['nodeStructure'] = Nodes;
 
-           tree['nodeStructure'] = Nodes;
-
-           return tree;
+            return tree;
         };
-
         let chart = new Treant(genTree({{ .Nodes }}, {{ .Word }}), function() {  console.log( 'Tree Loaded' ) }, $ );
     </script>
 </body>
