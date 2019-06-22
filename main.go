@@ -3,16 +3,26 @@ package main
 import (
 	"fmt"
 	"github.com/gocolly/colly"
+	"github.com/gorilla/mux"
+	"net/http"
+	"html/template"
 	"sort"
 	"sync"
+
 )
 
 var wg sync.WaitGroup
+var mutex = sync.RWMutex{}
 
-type node struct {
-	word string
-	level int
-	parent string
+type Node struct {
+	Word string
+	Level int
+	Parent string
+}
+
+type Page struct {
+	Word string
+	Nodes []Node
 }
 
 
@@ -34,19 +44,27 @@ func get(url string) []string {
 }
 
 func threading(c chan []string, word string, parentMap map[string]string) {
+
 	defer wg.Done()
+
 	var words []string
 	for _, w := range get(buildURL(word)) {
 		words = append(words, w)
+
 		parentMap[w] = word
+
 	}
 	c <- words
 }
 
-func main() {
-	word := "kiss"
+func wordHandler(w http.ResponseWriter, r *http.Request) {
+//func main() {
+	vars := mux.Vars(r)
+	w.WriteHeader(http.StatusOK)
+	word := vars["word"]
+	//word := "austere"
 	fmt.Println("START", word)
-	maxDepth := 3
+	maxDepth := 2
 
 	//bfs
 	var q map[string]int
@@ -57,7 +75,7 @@ func main() {
 
 	vis := make(map[string]bool)
 
-	store := make(map[node]bool)
+	store := make(map[Node]bool)
 
 	parentMap := make(map[string]string)
 
@@ -75,29 +93,47 @@ func main() {
 		wg.Wait()
 		close(queue)
 
+		fmt.Println("Starting", i)
 		for v := range queue {
 			for _, w := range v {
 				nq[w] = i
-				store[node { w, i, parentMap[w] }] = true
+				store[Node { w, i, parentMap[w] }] = true
 			}
 		}
+		fmt.Println("Done", i)
 	}
 
-	var ret []node
+	var List []Node
 
-	ret = append(ret, node { word, 0, parentMap[word] })
+	fmt.Println("Starting")
+	List = append(List, Node { word, 0, parentMap[word] })
 	for k, _ := range store {
-		ret = append(ret, k)
+		List = append(List, k)
 	}
 
-	sort.Slice(ret, func(i, j int) bool {
-		return ret[i].level < ret[j].level
+	sort.Slice(List, func(i, j int) bool {
+		return List[i].Level < List[j].Level
 	})
 
-	for _, v := range ret {
-		fmt.Println(v.word, " ", v.level, " ", v.parent)
+	fmt.Println("Done")
 
-	}
+	//for _, v := range List {
+	//	fmt.Println(v.Word, " ", v.Level, " ", v.Parent)
+	//}
+
+	p := Page { Word: word, Nodes: List }
+
+	t, _ := template.ParseFiles("Explore.html")
+	t.Execute(w, p)
+
+	fmt.Print(List)
 
 	fmt.Println("END")
+}
+
+
+func main() {
+	r := mux.NewRouter()
+	r.HandleFunc("/word/{word}", wordHandler)
+	http.ListenAndServe(":80", r)
 }

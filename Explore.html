@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>explore-project</title>
+</head>
+<body>
+    <div>
+        {{ range $k, $v := .Nodes }}
+            <h4>{{ $v.Word }}</h4>
+            <h4>{{ $v.Level }}</h4>
+            <h4>{{ $v.Parent }}</h4>
+        {{ end }}
+    </div>
+</body>
+</html>
