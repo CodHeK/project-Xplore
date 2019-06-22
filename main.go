@@ -3,10 +3,17 @@ package main
 import (
 	"fmt"
 	"github.com/gocolly/colly"
+	"sort"
 	"sync"
 )
 
 var wg sync.WaitGroup
+
+type node struct {
+	word string
+	level int
+	parent string
+}
 
 
 func buildURL(word string) string {
@@ -26,27 +33,33 @@ func get(url string) []string {
 	return ret
 }
 
-func threading(c chan []string, word string) {
+func threading(c chan []string, word string, parentMap map[string]string) {
 	defer wg.Done()
 	var words []string
 	for _, w := range get(buildURL(word)) {
 		words = append(words, w)
+		parentMap[w] = word
 	}
 	c <- words
 }
 
 func main() {
-	fmt.Println("START")
-	word := "jump"
-	maxDepth := 2
+	word := "kiss"
+	fmt.Println("START", word)
+	maxDepth := 3
 
 	//bfs
 	var q map[string]int
+
 	nq := map[string]int {
-		word: 0,
+		word : 0,
 	}
 
 	vis := make(map[string]bool)
+
+	store := make(map[node]bool)
+
+	parentMap := make(map[string]string)
 
 	for i := 1; i <= maxDepth; i++ {
 		fmt.Println(i)
@@ -56,18 +69,34 @@ func main() {
 			if _, ok := vis[word]; !ok {
 				wg.Add(1)
 				vis[word] = true
-				go threading(queue, word)
+				go threading(queue, word, parentMap)
 			}
 		}
 		wg.Wait()
 		close(queue)
 
 		for v := range queue {
-			fmt.Println(v)
 			for _, w := range v {
 				nq[w] = i
+				store[node { w, i, parentMap[w] }] = true
 			}
 		}
+	}
+
+	var ret []node
+
+	ret = append(ret, node { word, 0, parentMap[word] })
+	for k, _ := range store {
+		ret = append(ret, k)
+	}
+
+	sort.Slice(ret, func(i, j int) bool {
+		return ret[i].level < ret[j].level
+	})
+
+	for _, v := range ret {
+		fmt.Println(v.word, " ", v.level, " ", v.parent)
+
 	}
 
 	fmt.Println("END")
