@@ -59,7 +59,7 @@ func wordHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	word := vars["word"]
 	fmt.Println("START", word)
-	maxDepth := 2
+	maxDepth := 1
 
 	//bfs
 	var q map[string]int

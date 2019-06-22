@@ -10,15 +10,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/treant-js/1.0/Treant.js"></script>
 </head>
 <body>
-    <div id="tree" style="width:735px; height: 660px"> </div>
+    <div id="tree" style="width: auto;height: auto"> </div>
 
     <script>
-        const genTree = (nodes) => {
+        const genTree = (nodes, word) => {
            let tree = {}, treeArray = [];
            for(const node of nodes) {
-               tree[node.Word] = {
-                   parent: node.Parent,
-                   text: { name: node.Word }
+               if(node.Word === word) {
+                   tree[node.Word] = {
+                       text: { name: node.Word }
+                   };
+               } else {
+                   tree[node.Word] = {
+                       parent: tree[node.Parent],
+                       text: { name: node.Word }
+                   };
                }
            }
            let config = {
@@ -32,8 +38,7 @@
            return treeArray;
         };
 
-
-        let chart = new Treant(genTree({{ .Nodes }}), function() { alert( 'Tree Loaded' ) }, $ );
+        let chart = new Treant(genTree({{ .Nodes }}, {{ .Word }}), function() { alert( 'Tree Loaded' ) }, $ );
     </script>
 </body>
 </html>
