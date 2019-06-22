@@ -68,7 +68,7 @@ func wordHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	word := vars["word"]
 	fmt.Println("START", word)
-	maxDepth := 1
+	maxDepth := 2
 
 	//bfs
 	var q map[string]int
@@ -101,16 +101,21 @@ func wordHandler(w http.ResponseWriter, r *http.Request) {
 		for v := range queue {
 			for _, w := range v {
 				nq[w] = i
-				store[Node { w, i, parentMap[w], childrenMap[w] }] = true
+				store[Node { w, i, parentMap[w], "" }] = true
 			}
 		}
 	}
+
+	//for k, _ := range store {
+	//	k.Children = childrenMap[k.Word]
+	//	fmt.Println(k.Word, k.Children)
+	//}
 
 	var List []Node
 
 	List = append(List, Node { word, 0, parentMap[word], childrenMap[word] })
 	for k, _ := range store {
-		List = append(List, k)
+		List = append(List, Node { k.Word, k.Level, k.Parent, childrenMap[k.Word]})
 	}
 
 	sort.Slice(List, func(i, j int) bool {

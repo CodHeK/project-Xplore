@@ -14,27 +14,31 @@
     <div id="tree" style="width: auto;height: auto"> </div>
 
     <script>
+        let vis = new Map();
         const dfs = (tree, root, objTree) => {
             console.log(tree, root, objTree)
-            if(objTree.children === "" || objTree.children === undefined) {
-                tree.push({
-                    text: { name: objTree.word }
+            vis.set(root, true)
+            tree['children'] = []
+            if(objTree === undefined) {
+                tree['children'].push({
+                    text: { name: root }
                 });
+                return;
             }
-
 
             let children = objTree.children;
 
             console.log(children.split("/"));
 
             for(const child of children.split("/")) {
-                tree['text'] = objTree.word;
-                tree['children'].push({
-                    text: { name: child },
-                    children: []
-                });
-                tree['children']['children'] = [];
-                dfs(tree['children']['children'], child, objTree[child])
+                if(!vis.has(child)) {
+                    tree['text'] = objTree.word;
+                    tree['children'].push({
+                        text: {name: child},
+                        children: []
+                    });
+                    dfs(tree['children'], child, objTree[child])
+                }
             }
             return tree;
         }
@@ -47,12 +51,17 @@
                };
            }
            tree['chart'] = {
-               container: "#tree"
+               container: "#tree",
+               connectors: {
+                   type: 'step'
+               }
            }
 
            let Nodes = {
                children: []
            };
+
+           console.log(objTree)
 
            dfs(Nodes, word, objTree[word]);
 
