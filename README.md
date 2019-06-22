@@ -13,13 +13,17 @@ Experiment exploring connections within english words by creating deep chained s
 ![jump](screenshots/jump2.png)
 
 ![austere](screenshots/austere2.png)
-
+#
 ##### Depth = 3
 
-The tree is too large to fit screen, image below shows 
-only the left half of the tree!
+![a3](screenshots/austere3.png)
 
 ![j3](screenshots/jump3.png)
+#
+##### Going into greater depths
+![a4](screenshots/austere4.png)
+
+![j4](screenshots/jump4.png)
 
 ### In the end
 

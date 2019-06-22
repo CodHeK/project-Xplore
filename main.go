@@ -48,15 +48,16 @@ func threading(c chan []string, word string, parentMap map[string]string, childr
 	var words []string
 	childString := ""
 	for i, w := range get(buildURL(word)) {
-		if i <= 3 {
+		if i <= 1 {
 			words = append(words, w)
 			parentMap[w] = word
 			childString += w + "/"
 		}
-		if i == 4 {
+		if i == 2 {
 			words = append(words, w)
 			parentMap[w] = word
 			childString += w
+			break
 		}
   	}
 	childrenMap[word] = childString
@@ -68,7 +69,7 @@ func wordHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	word := vars["word"]
 	fmt.Println("START", word)
-	maxDepth := 2
+	maxDepth := 4
 
 	//bfs
 	var q map[string]int
