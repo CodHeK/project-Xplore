@@ -25,6 +25,20 @@ Experiment exploring connections within english words by creating deep chained s
 
 ![j4](screenshots/jump4.png)
 
+### Running the app
+
+```
+git clone https://github.com/CodHeK/project-Xplore.git
+
+// make sure you have go installed and PATH set once that is done just run
+
+go run main.go
+
+GO TO localhost:90/word/{you-word-here}
+
+DEPTH can be set using the maxDepth variable in the main.go file
+```
+
 ### In the end
 
 Well, if you're wondering what is the use of doing this! I didn't find any except you can know synonyms of synonyms 
