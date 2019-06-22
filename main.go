@@ -12,7 +12,6 @@ import (
 )
 
 var wg sync.WaitGroup
-var mutex = sync.RWMutex{}
 
 type Node struct {
 	Word string
@@ -125,5 +124,5 @@ func wordHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/word/{word}", wordHandler)
-	http.ListenAndServe(":80", r)
+	http.ListenAndServe(":90", r)
 }

@@ -10,28 +10,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/treant-js/1.0/Treant.js"></script>
 </head>
 <body>
-    <div id="tree-simple" style="width:735px; height: 660px"> </div>
+    <div id="tree" style="width:735px; height: 660px"> </div>
 
     <script>
-        alert
-        let simple_chart_config = {
-            chart: {
-                container: "#tree-simple"
-            },
-
-            nodeStructure: {
-                text: { name: "Parent node" },
-                children: [
-                    {
-                        text: { name: "First child" }
-                    },
-                    {
-                        text: { name: "Second child" }
-                    }
-                ]
-            }
+        const genTree = (nodes) => {
+           let tree = {}, treeArray = [];
+           for(const node of nodes) {
+               tree[node.Word] = {
+                   parent: node.Parent,
+                   text: { name: node.Word }
+               }
+           }
+           let config = {
+               container: '#tree'
+           };
+           for(const [_, v] of Object.entries(tree)) {
+               treeArray.push(v);
+           }
+           treeArray = [ config, ...treeArray ]
+           console.log(treeArray);
+           return treeArray;
         };
-        let chart = new Treant(simple_chart_config, function() { alert( 'Tree Loaded' ) }, $ );
+
+
+        let chart = new Treant(genTree({{ .Nodes }}), function() { alert( 'Tree Loaded' ) }, $ );
     </script>
 </body>
 </html>
