@@ -8,3 +8,8 @@ Experiment exploring connections within english words by creating deep chained s
 ![jump](jump.png)
 
 ![austere](austere.png)
+#
+##### Depth set to 2:
+![jump](jump2.png)
+
+![austere](austere2.png)
