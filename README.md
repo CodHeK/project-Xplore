@@ -28,6 +28,6 @@ Experiment exploring connections within english words by creating deep chained s
 ### In the end
 
 Well, if you're wondering what is the use of doing this! I didn't find any except you can know synonyms of synonyms 
-(don't know how that is useful, but ok! :stuck_out_tongue:) It was just a coding excercise to just try out new things! 
+(don't know how that is useful, but ok! :stuck_out_tongue:) It was just a coding excercise I came up with to try out new things! 
 ######
 So, please feel free to raise an issue if you find one! :smiley:
