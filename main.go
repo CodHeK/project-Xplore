@@ -44,9 +44,7 @@ func get(url string) []string {
 }
 
 func threading(c chan []string, word string, parentMap map[string]string) {
-
 	defer wg.Done()
-
 	var words []string
 	for _, w := range get(buildURL(word)) {
 		words = append(words, w)
@@ -58,11 +56,9 @@ func threading(c chan []string, word string, parentMap map[string]string) {
 }
 
 func wordHandler(w http.ResponseWriter, r *http.Request) {
-//func main() {
 	vars := mux.Vars(r)
 	w.WriteHeader(http.StatusOK)
 	word := vars["word"]
-	//word := "austere"
 	fmt.Println("START", word)
 	maxDepth := 2
 
@@ -92,20 +88,16 @@ func wordHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		wg.Wait()
 		close(queue)
-
-		fmt.Println("Starting", i)
 		for v := range queue {
 			for _, w := range v {
 				nq[w] = i
 				store[Node { w, i, parentMap[w] }] = true
 			}
 		}
-		fmt.Println("Done", i)
 	}
 
 	var List []Node
 
-	fmt.Println("Starting")
 	List = append(List, Node { word, 0, parentMap[word] })
 	for k, _ := range store {
 		List = append(List, k)
@@ -114,8 +106,6 @@ func wordHandler(w http.ResponseWriter, r *http.Request) {
 	sort.Slice(List, func(i, j int) bool {
 		return List[i].Level < List[j].Level
 	})
-
-	fmt.Println("Done")
 
 	//for _, v := range List {
 	//	fmt.Println(v.Word, " ", v.Level, " ", v.Parent)

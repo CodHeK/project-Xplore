@@ -3,14 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>explore-project</title>
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="css/Treant.css" type="text/css"/>
+    <script src="vendor/jquery.min.js"></script>
+    <script src="vendor/jquery.easing.js"></script>
+    <script src="vendor/jquery.mousewheel.js"></script>
 </head>
 <body>
-    <div>
-        {{ range $k, $v := .Nodes }}
-            <h4>{{ $v.Word }}</h4>
-            <h4>{{ $v.Level }}</h4>
-            <h4>{{ $v.Parent }}</h4>
-        {{ end }}
-    </div>
+    <div id="tree-simple" style="width:735px; height: 660px"> </div>
+
+    <!-- javascript -->
+    <script src="vendor/raphael.js"></script>
+    <script src="js/Treant.js"></script>
+    <script>
+
+        let simple_chart_config = {
+            chart: {
+                container: "#tree-simple"
+            },
+
+            nodeStructure: {
+                text: { name: "Parent node" },
+                children: [
+                    {
+                        text: { name: "First child" }
+                    },
+                    {
+                        text: { name: "Second child" }
+                    }
+                ]
+            }
+        };
+        let chart = new Treant(simple_chart_config, function() { alert( 'Tree Loaded' ) }, $ );
+    </script>
 </body>
 </html>
