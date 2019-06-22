@@ -5,4 +5,6 @@ Experiment exploring connections within english words by creating deep chained s
 ### Result
 
 ##### Depth set to 1:
-![ss](ss.png)
+![jump](jump.png)
+
+![austere](austere.png)
