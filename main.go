@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"html/template"
 	"sort"
+	"strconv"
 	"sync"
 
 )
@@ -69,7 +70,7 @@ func wordHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	word := vars["word"]
 	fmt.Println("START", word)
-	maxDepth := 4
+	maxDepth, _ := strconv.Atoi(vars["depth"])
 
 	//bfs
 	var q map[string]int
@@ -107,10 +108,6 @@ func wordHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	//for k, _ := range store {
-	//	k.Children = childrenMap[k.Word]
-	//	fmt.Println(k.Word, k.Children)
-	//}
 
 	var List []Node
 
@@ -122,10 +119,6 @@ func wordHandler(w http.ResponseWriter, r *http.Request) {
 	sort.Slice(List, func(i, j int) bool {
 		return List[i].Level < List[j].Level
 	})
-
-	//for _, v := range List {
-	//	fmt.Println(v.Word, " ", v.Level, " ", v.Parent)
-	//}
 
 	p := Page { Word: word, Nodes: List }
 
@@ -140,6 +133,6 @@ func wordHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/word/{word}", wordHandler)
+	r.HandleFunc("/word/{word}/{depth}", wordHandler)
 	http.ListenAndServe(":90", r)
 }

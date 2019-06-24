@@ -32,11 +32,9 @@ git clone https://github.com/CodHeK/project-Xplore.git
 
 // make sure you have go installed and PATH set once that is done just run
 
-go run main.go
+$ go run main.go
 
-GO TO localhost:90/word/{you-word-here} Eg: localhost:90/word/austere
-
-DEPTH can be set using the maxDepth variable in the main.go file
+GO TO localhost:90/word/{you-word-here}/{depth} Eg: localhost:90/word/austere/3
 ```
 
 ### In the end
