@@ -6,3 +6,13 @@ enabled = true
 
   [analyzers.meta]
   import_root = "github.com/CodHeK/project-Xplore"
+  import_paths = [
+    "fmt",
+    "github.com/gocolly/colly",
+    "github.com/gorilla/mux",
+    "net/http",
+    "html/template",
+    "sort",
+    "strconv",
+    "sync"
+  ]
