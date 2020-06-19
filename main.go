@@ -40,8 +40,6 @@ func get(url string) []string {
 	})
 	c.Visit(url)
 	c.Wait()
-
-	return ret
 }
 
 func threading(c chan []string, word string, parentMap map[string]string, childrenMap map[string]string) {
