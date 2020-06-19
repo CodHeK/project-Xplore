@@ -40,9 +40,11 @@ func get(url string) []string {
 	})
 	c.Visit(url)
 	c.Wait()
+	
+	return ret
 }
 
-func threading(c chan []string, word string, parentMap map[string]string, childrenMap map[string]string) {
+func threading(c chan []string, word string, parentMap, childrenMap map[string]string) {
 	defer wg.Done()
 	var words []string
 	childString := ""
